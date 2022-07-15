@@ -2,7 +2,7 @@
 
 一个小 demo，运行时读取 pb 结构，用运行时获取的 pb 结构打印消息。
 
-首先，我们有一个 protobuf 文件
+有一个 protobuf 文件
 ```protobuf
 syntax = "proto3";
 package m;
@@ -18,8 +18,8 @@ message User {
 echo 'age:12\nname:"test"' | protoc --encode=m.User testdata/message.proto > output/message.pb
 ```
 
-我们的 demo 程序并不是常规地需要预先将 protobuf 文件编译为 go 再编译到二进制里，而是在运行时获取 pb 结构相关的信息，再利用 pb 结构信息
-解析出 pb 消息。换言之，`User`这个结构体是在运行时作为输入进到我们的 demo 程序里来的。
+demo 程序并不是预先将 protobuf 文件编译为 go 再编译到二进制里，而是在运行时获取 pb 结构，再利用 pb 结构
+解析出 pb 消息。换言之，`User`这个结构体是在运行时作为输入进到 demo 程序里来的。
 
 protobuf 的编译器是用 c++ 实现的，protobuf go 官方库中并无 parse protobuf 的逻辑。所以需要借用 protoc 的 parser 能力。
 protoc 可以解析 protobuf 文件后输出 FileDescriptorSet （一个在 descriptor.proto 中声明好的结构体）。
