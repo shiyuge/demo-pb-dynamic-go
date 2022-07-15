@@ -40,14 +40,14 @@ func run(descriptorFileName string, incomingMessageFileName string) {
 
 	files := f.GetFile()
 	for _, file := range files {
-		log.Println("found file ", file.Name, " in file descriptor set")
+		log.Printf("found file %s in file descriptor set\n", file.GetName())
 		messages := file.GetMessageType()
 		for _, m := range messages {
-			log.Println("found message ", m.Name, " in file ", file.Name)
+			log.Printf("found message %s in file %s\n", m.GetName(), file.GetName())
 			tryToParseIncomingMessageWithDescriptor(incomingMessage, m)
 			fields := m.GetField()
 			for _, field := range fields {
-				log.Println("found field ", field.Name, " in message ", m.Name, " in file ", file.Name)
+				log.Printf("found field %s in message %s in file %s\n", field.GetName(), m.GetName(), file.GetName())
 			}
 		}
 	}
@@ -71,9 +71,9 @@ func tryToParseIncomingMessageWithDescriptor(v []byte, d *descriptor.DescriptorP
 	m := dynamicpb.NewMessage(d.ProtoReflect().Descriptor())
 	err := proto.Unmarshal(v, m)
 	if err != nil {
-		log.Println("cannot parse incoming message with message descriptor ", d.Name, " ", err.Error())
+		log.Printf("cannot parse incoming message with message descriptor %s: %+v\n", d.GetName(), err.Error())
 		return
 	}
 
-	log.Println("message parsed successfully: ", m.String())
+	log.Printf("message parsed successfully: %s\n", m.String())
 }
