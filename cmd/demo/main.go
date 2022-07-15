@@ -7,6 +7,8 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/reflect/protodesc"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
@@ -39,15 +41,22 @@ func run(descriptorFileName string, incomingMessageFileName string) {
 	}
 
 	files := f.GetFile()
-	for _, file := range files {
-		log.Printf("found file %s in file descriptor set\n", file.GetName())
-		messages := file.GetMessageType()
-		for _, m := range messages {
-			log.Printf("found message %s in file %s\n", m.GetName(), file.GetName())
+	for _, fileProto := range files {
+		file, err := protodesc.NewFile(fileProto, nil)
+		if err != nil {
+			log.Fatalf("fail to create file for %s: %+v", fileProto.GetName(), err)
+		}
+
+		log.Printf("found file %s in file descriptor set\n", file.Name())
+		messages := file.Messages()
+		for i := 0; i < messages.Len(); i++ {
+			m := messages.Get(i)
+			log.Printf("found message %s in file %s\n", m.Name(), file.Name())
 			tryToParseIncomingMessageWithDescriptor(incomingMessage, m)
-			fields := m.GetField()
-			for _, field := range fields {
-				log.Printf("found field %s in message %s in file %s\n", field.GetName(), m.GetName(), file.GetName())
+			fields := m.Fields()
+			for j := 0; j < fields.Len(); j++ {
+				field := fields.Get(j)
+				log.Printf("found field %s in message %s in file %s\n", field.Name(), m.Name(), file.Name())
 			}
 		}
 	}
@@ -67,11 +76,12 @@ func readFile(fileName string) ([]byte, error) {
 	return bs, nil
 }
 
-func tryToParseIncomingMessageWithDescriptor(v []byte, d *descriptor.DescriptorProto) {
-	m := dynamicpb.NewMessage(d.ProtoReflect().Descriptor())
-	err := proto.Unmarshal(v, m)
+func tryToParseIncomingMessageWithDescriptor(incomingMessage []byte, messageDescriptor protoreflect.MessageDescriptor) {
+	m := dynamicpb.NewMessage(messageDescriptor)
+	err := proto.Unmarshal(incomingMessage, m)
 	if err != nil {
-		log.Printf("cannot parse incoming message with message descriptor %s: %+v\n", d.GetName(), err.Error())
+		log.Printf("cannot parse incoming message with message descriptor %s: %+v\n",
+			messageDescriptor.Name(), err.Error())
 		return
 	}
 
