@@ -27,6 +27,8 @@ demo 程序将这个 FileDescriptorSet 作为运行时输入。
 
 ## 运行 demo
 
+执行 `make test`
+
 ```
 2022/07/15 22:32:10 found file m in file descriptor set
 2022/07/15 22:32:10 found message User in file m
