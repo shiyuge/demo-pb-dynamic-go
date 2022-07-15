@@ -14,7 +14,7 @@ import (
 
 func main() {
 	if len(os.Args) < 3 {
-		log.Fatalf("usage: first argument should be a compiled protobuf file descriptor set file")
+		log.Fatalf("usage: demo PROTOBUF_FILE_DESCRIPTOR_SET_FILENAME INCOMING_MESSAGE_FILENAME")
 	}
 
 	descriptorFileName := os.Args[1]
