@@ -8,11 +8,11 @@ fmt:
 
 build:
 	mkdir -p output
-	go build -o output/main
+	go build -o output/demo ./cmd/demo
 
 test: build
 	protoc --descriptor_set_out=output/message.descriptor testdata/message.proto
-	output/main output/message.descriptor
+	output/demo output/message.descriptor
 
 unit_test:
 	go test -mod=mod $$(go list ./... | grep -v encryptor) -cover -coverprofile=coverage.out -coverpkg=./... -gcflags all=-l
