@@ -12,7 +12,8 @@ build:
 
 test: build
 	protoc --descriptor_set_out=output/message.descriptor testdata/message.proto
-	output/demo output/message.descriptor
+	echo 'age:12\nname:"test"' | protoc --encode=m.User testdata/message.proto > output/message.pb
+	output/demo output/message.descriptor output/message.pb
 
 unit_test:
 	go test -mod=mod $$(go list ./... | grep -v encryptor) -cover -coverprofile=coverage.out -coverpkg=./... -gcflags all=-l

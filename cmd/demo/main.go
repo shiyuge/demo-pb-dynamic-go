@@ -15,12 +15,19 @@ func main() {
 		log.Fatalf("usage: first argument should be a compiled protobuf file descriptor set file")
 	}
 
-	descriptorFileSet, err := readFile(os.Args[1])
+	descriptorFileName := os.Args[1]
+	incomingMessageFileName := os.Args[2]
+
+	run(descriptorFileName, incomingMessageFileName)
+}
+
+func run(descriptorFileName string, incomingMessageFileName string) {
+	descriptorFileSet, err := readFile(descriptorFileName)
 	if err != nil {
 		log.Fatalf("fail to read descriptorFileSet: %+v", err)
 	}
 
-	incomingMessage, err := readFile(os.Args[2])
+	incomingMessage, err := readFile(incomingMessageFileName)
 	if err != nil {
 		log.Fatalf("fail to read incomingMessage: %+v", err)
 	}
@@ -44,7 +51,6 @@ func main() {
 			}
 		}
 	}
-
 }
 
 func readFile(fileName string) ([]byte, error) {
