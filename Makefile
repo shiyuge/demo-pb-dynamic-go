@@ -1,6 +1,6 @@
 export LOCAL_MODULE := github.com/shiyuge/demo-pb-dynamic-go
 
-.PHONY: build fmt
+.PHONY: build fmt test
 fmt:
 	@go fmt ./...
 	@goimports -local $(LOCAL_MODULE) -w $$(find . -type f -name '*.go' -not -path "./*_gen/*" -not -path "*/mock/*")
@@ -9,3 +9,7 @@ fmt:
 build:
 	mkdir -p output
 	go build -o output/main
+
+test: build
+	protoc --descriptor_set_out=output/message.descriptor testdata/message.proto
+	output/main output/message.descriptor
