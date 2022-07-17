@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
@@ -34,7 +34,7 @@ func run(descriptorFileName string, incomingMessageFileName string) {
 		log.Fatalf("fail to read incomingMessage: %+v", err)
 	}
 
-	var f descriptor.FileDescriptorSet
+	var f descriptorpb.FileDescriptorSet
 	err = proto.Unmarshal(descriptorFileSet, &f)
 	if err != nil {
 		log.Fatalf("fail unmarshall FileDescriptorSet: %+v", err)
