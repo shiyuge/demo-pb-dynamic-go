@@ -39,7 +39,9 @@ demo 程序将这个 FileDescriptorSet 作为运行时输入。
 
 ## dev dependency
 
-1. protoc
+protoc
 
 不需要 protoc-go 因为我们并不会将 pb 编译成 go 文件。我们只是在运行时读取 pb 的结构。
+
+
 
